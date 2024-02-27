@@ -12,8 +12,8 @@ from llmperf import common_metrics
 
 
 @ray.remote
-class AzureAIStudioChatCompletionsClient(LLMClient):
-    """Client for AIS Chat Completions API."""
+class AzureAIChatCompletionsClient(LLMClient):
+    """Client for Azure AI Chat Completions API."""
 
     def llm_request(self, request_config: RequestConfig) -> Dict[str, Any]:
         prompt = request_config.prompt
@@ -47,18 +47,18 @@ class AzureAIStudioChatCompletionsClient(LLMClient):
 
         start_time = time.monotonic()
         most_recent_received_token_time = time.monotonic()
-        address = os.environ.get("AIS_API_BASE")
+        address = os.environ.get("AZUREAI_API_BASE")
         if not address:
-            raise ValueError("the environment variable AIS_API_BASE must be set.")
-        key = os.environ.get("AIS_API_KEY")
+            raise ValueError("the environment variable AZUREAI_API_BASE must be set.")
+        key = os.environ.get("AZUREAI_API_KEY")
         if not key:
-            raise ValueError("the environment variable AIS_API_KEY must be set.")
+            raise ValueError("the environment variable AZUREAI_API_KEY must be set.")
         headers = {"Authorization": f"Bearer {key}"}
         if not address:
             raise ValueError("No host provided.")
         if not address.endswith("/"):
             address = address + "/"
-        address += "v1/chat/completions"
+        address += "chat/completions"
         try:
             with requests.post(
                 address,
